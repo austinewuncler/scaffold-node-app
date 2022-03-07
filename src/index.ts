@@ -1,9 +1,12 @@
-import { copyFile, mkdir, readFile, writeFile } from 'fs/promises';
+#!/usr/bin/env node
+import { mkdir, readFile, writeFile } from 'fs/promises';
 import { prompt } from 'inquirer';
 import ora from 'ora';
 import { resolve } from 'path';
 import { format } from 'prettier';
 import { cd, exec } from 'shelljs';
+
+import configs from './configs';
 
 const getAppName = () =>
   prompt([
@@ -63,10 +66,14 @@ const configurePackageJson = async (packageJsonPath: string) => {
   await writeFile(packageJsonPath, newPackageJson);
 };
 
-const copyConfig = async (config: string, destination: string) => {
-  await copyFile(
-    resolve(__dirname, 'configs', config),
-    resolve(destination, config)
+const createConfigs = async (destination: string) => {
+  await writeFile(
+    resolve(destination, '.eslintrc.json'),
+    format(JSON.stringify(configs.eslintrc), { parser: 'json' })
+  );
+  await writeFile(
+    resolve(destination, 'tsconfig.json'),
+    format(JSON.stringify(configs.tsconfig), { parser: 'json' })
   );
 };
 
@@ -91,8 +98,7 @@ const run = async () => {
   if (!directory) throw new Error('could not create app directory');
   await initializeApp(directory);
   await configurePackageJson(resolve(directory, 'package.json'));
-  await copyConfig('tsconfig.json', directory);
-  await copyConfig('.eslintrc.json', directory);
+  createConfigs(directory);
   await installDependencies(directory);
 };
 
