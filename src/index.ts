@@ -10,7 +10,7 @@ import { generateFiles, initialize, installPackages } from './services';
 const command = new Command('scafnode');
 
 command
-  .argument('<name>', 'the directory name of the spp')
+  .argument('<name>', 'the directory name of the app')
   .action(async (name) => {
     const path = resolve(process.cwd(), name);
     echo(`creating new project in ${chalk.blue(path)}`);
@@ -21,6 +21,7 @@ command
     } catch (error: any) {
       echo(error.message);
     }
+    echo('project successfully created');
   });
 
 command.parse();

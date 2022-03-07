@@ -41,7 +41,12 @@ export const installPackages = async (path: string) => {
   const packageConfig = {
     ...JSON.parse(packageJson),
     scripts: { start: 'node src/index.js' },
-    devDependencies: { eslint: '^8.10.0' },
+    devDependencies: {
+      eslint: '^8.10.0',
+      'eslint-config-airbnb-base': '^15.0.0',
+      'eslint-plugin-import': '^2.25.4',
+      'eslint-plugin-simple-import-sort': '^7.0.0',
+    },
   };
   await writeFile(
     resolve(path, 'package.json'),

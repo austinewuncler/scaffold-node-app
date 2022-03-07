@@ -4,5 +4,8 @@ export const eslintJs = {
   extends: ['airbnb-base'],
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
   plugins: ['simple-import-sort'],
-  rules: {},
+  rules: {
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error',
+  },
 };
