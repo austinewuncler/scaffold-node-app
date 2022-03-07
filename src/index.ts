@@ -1,5 +1,6 @@
 import { copyFile, mkdir, readFile, writeFile } from 'fs/promises';
 import { prompt } from 'inquirer';
+import ora from 'ora';
 import { resolve } from 'path';
 import { format } from 'prettier';
 import { cd, exec } from 'shelljs';
@@ -69,6 +70,21 @@ const copyConfig = async (config: string, destination: string) => {
   );
 };
 
+const installDependencies = (directory: string) =>
+  new Promise<void>((res, rej) => {
+    cd(directory);
+    const spinner = ora('Installing dependencies...').start();
+    exec('npm i', { silent: true }, (code) => {
+      if (code === 0) {
+        spinner.succeed('Dependencies installed');
+        res();
+      } else {
+        spinner.fail('Failed to install dependencies');
+        rej(new Error('failed to install dependencies'));
+      }
+    });
+  });
+
 const run = async () => {
   const { appName } = await getAppName();
   const directory = await createAppDirectory(appName);
@@ -77,6 +93,7 @@ const run = async () => {
   await configurePackageJson(resolve(directory, 'package.json'));
   await copyConfig('tsconfig.json', directory);
   await copyConfig('.eslintrc.json', directory);
+  await installDependencies(directory);
 };
 
 run();
