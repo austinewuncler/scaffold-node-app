@@ -1,27 +1,26 @@
 #!/usr/bin/env node
 
 import chalk from 'chalk';
-import { Command } from 'commander';
+import { program } from 'commander';
 import { resolve } from 'path';
 import { echo } from 'shelljs';
 
 import { generateFiles, initialize, installPackages } from './services';
 
-const command = new Command('scafnode');
-
-command
+program
   .argument('<name>', 'the directory name of the app')
-  .action(async (name) => {
+  .option('-t --typescript', 'typescript support', false)
+  .action(async (name, options) => {
     const path = resolve(process.cwd(), name);
     echo(`creating new project in ${chalk.blue(path)}`);
     try {
-      await generateFiles(path);
+      await generateFiles(path, options);
       await initialize(path);
-      await installPackages(path);
+      await installPackages(path, options);
     } catch (error: any) {
       echo(error.message);
     }
     echo('project successfully created');
   });
 
-command.parse();
+program.parse();
