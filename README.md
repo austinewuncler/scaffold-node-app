@@ -25,9 +25,11 @@ Navigate to the directory where you keep your projects, then run
 scafnode <name>
 ```
 
-where `<name>` is the name of your project. This will create a new directory and configure your new project
+where `<name>` is the name of your project. This will create a new directory and configure your new project.
+There is an optional `-t` or `--typescript` flag that when supplied, scaffolds a TypeScript project.
 
 ## Features
 
 - NodeJS
+- TypeScript
 - ESLint
